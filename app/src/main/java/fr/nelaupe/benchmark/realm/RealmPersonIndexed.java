@@ -6,7 +6,7 @@ import io.realm.annotations.Index;
 /**
  * Created by lucas34990 on 27/11/17.
  */
-public class RealMPersonIndexed extends RealmObject {
+public class RealmPersonIndexed extends RealmObject {
 
     private long id;
     @Index
@@ -16,12 +16,12 @@ public class RealMPersonIndexed extends RealmObject {
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {

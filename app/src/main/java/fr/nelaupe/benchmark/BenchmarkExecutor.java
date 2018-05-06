@@ -13,8 +13,11 @@ import android.content.Context;
 public interface BenchmarkExecutor {
 
     void setup(Context context);
+
     long runInsertion(int iteration);
+
     long runQuery(String query);
+
     void tearDown();
 
 }

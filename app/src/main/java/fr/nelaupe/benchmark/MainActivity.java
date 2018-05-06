@@ -1,8 +1,11 @@
 package fr.nelaupe.benchmark;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,15 +17,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void run() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                new BenchmarkMaster(MainActivity.this).run();
-                return null;
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new BenchmarkAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private static class BenchmarkAsyncTask extends AsyncTask<Void, Void, Void> {
 
+        private WeakReference<MainActivity> activityReference;
 
+        BenchmarkAsyncTask(MainActivity activityReference) {
+            this.activityReference = new WeakReference<>(activityReference);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Context context = activityReference.get();
+            if (context != null) {
+                new BenchmarkMaster(context).run();
+            }
+            return null;
+        }
+    }
 }

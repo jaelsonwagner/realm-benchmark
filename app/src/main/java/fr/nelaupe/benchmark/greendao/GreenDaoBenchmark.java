@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.fluttercode.datafactory.impl.DataFactory;
 
 import fr.nelaupe.benchmark.BenchmarkExecutor;
+import fr.nelaupe.benchmark.BenchmarkUtil;
 
 /**
  * Created with IntelliJ
@@ -36,7 +37,7 @@ public class GreenDaoBenchmark implements BenchmarkExecutor {
 
         final GreenPersonDao greenPersonDao = session.getGreenPersonDao();
 
-        long start = System.currentTimeMillis();
+        long start = BenchmarkUtil.getCurrentTime();
         session.runInTx(new Runnable() {
             @Override
             public void run() {
@@ -47,14 +48,15 @@ public class GreenDaoBenchmark implements BenchmarkExecutor {
                 }
             }
         });
-        return System.currentTimeMillis() - start;
+        return BenchmarkUtil.getElapsedTime(start);
+
     }
 
     @Override
     public long runQuery(String query) {
-        long start = System.nanoTime();
-        session.getGreenPersonDao().queryBuilder().where(GreenPersonDao.Properties.Email.like("%"+query+"%")).buildCursor().forCurrentThread().query().getCount();
-        return System.nanoTime() - start;
+        long start = BenchmarkUtil.getCurrentTime();
+        session.getGreenPersonDao().queryBuilder().where(GreenPersonDao.Properties.Email.like("%" + query + "%")).buildCursor().forCurrentThread().query().getCount();
+        return BenchmarkUtil.getElapsedTime(start);
     }
 
     @Override

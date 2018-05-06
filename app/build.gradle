@@ -1,19 +1,40 @@
+buildscript {
+    ext {
+        objectboxVersion = '1.5.0'
+        realmVersion = '4.2.0'
+        greendaoVersion = '3.2.2'
+        datafactoryVersion = '0.8'
+        timberVersion = '4.7.0'
+    }
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
+        classpath "io.realm:realm-gradle-plugin:$realmVersion"
+        classpath "org.greenrobot:greendao-gradle-plugin:$greendaoVersion"
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'io.objectbox'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.0"
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "fr.nelaupe.myapplication"
-        minSdkVersion 15
-        targetSdkVersion 27
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,10 +44,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'org.fluttercode.datafactory:datafactory:0.8'
-    compile 'org.greenrobot:greendao:3.2.2'
-    compile 'io.objectbox:objectbox-android:1.2.1'
+    api fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "org.fluttercode.datafactory:datafactory:$datafactoryVersion"
+    implementation "org.greenrobot:greendao:$greendaoVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    testImplementation 'junit:junit:4.12'
 }

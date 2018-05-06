@@ -1,29 +1,38 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
 buildscript {
+
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "http://objectbox.net/beta-repo/" }
+        google()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "io.realm:realm-gradle-plugin:4.2.0"
-        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
-        classpath 'io.objectbox:objectbox-gradle-plugin:1.2.1'
 
+    dependencies {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        // need to include in top build file
+        // https://developer.android.com/studio/build/gradle-plugin-3-0-0.html#known_issues
+        classpath 'com.android.tools.build:gradle:3.1.2'
     }
 }
 
 allprojects {
+    // approach recommended at
+    // https://medium.com/@ali.muzaffar/gradle-configure-variables-for-all-android-project-modules-in-one-place-5a6e56cd384e
+    project.ext {
+        compileSdkVersion = 27
+        buildToolsVersion = "27.0.3"
+        minSdkVersion = 15
+        targetSdkVersion = 27
+    }
+
     repositories {
         jcenter()
         mavenCentral()
-        maven {
-            url "http://objectbox.net/beta-repo/"
-        }
+        google()
     }
 }
 

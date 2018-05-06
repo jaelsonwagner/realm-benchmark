@@ -18,7 +18,7 @@ package fr.nelaupe.benchmark.realm;
 
 import io.realm.RealmObject;
 
-public class RealMPerson extends RealmObject {
+public class RealmPerson extends RealmObject {
 
     private long id;
     private String email;

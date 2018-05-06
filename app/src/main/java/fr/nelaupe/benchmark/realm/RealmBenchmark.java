@@ -1,4 +1,7 @@
-package fr.nelaupe.benchmark.objectbox;
+/**
+ * Copyright
+ */
+package fr.nelaupe.benchmark.realm;
 
 import android.content.Context;
 
@@ -6,22 +9,28 @@ import org.fluttercode.datafactory.impl.DataFactory;
 
 import fr.nelaupe.benchmark.BenchmarkExecutor;
 import fr.nelaupe.benchmark.BenchmarkUtil;
-import io.objectbox.Box;
-import io.objectbox.BoxStore;
+import io.realm.Case;
+import io.realm.Realm;
 
 /**
  * Created with IntelliJ
  * Created by lucas
  * Date 26/03/15
  */
+public class RealmBenchmark implements BenchmarkExecutor {
 
-public class ObjectBoxBenchmark implements BenchmarkExecutor {
-
-    private BoxStore boxStore;
+    private Realm realm;
 
     @Override
     public void setup(Context context) {
-        boxStore = MyObjectBox.builder().androidContext(context).build();
+        Realm.init(context);
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm transaction) {
+                transaction.deleteAll();
+            }
+        });
     }
 
     @Override
@@ -30,32 +39,30 @@ public class ObjectBoxBenchmark implements BenchmarkExecutor {
 
         long start = BenchmarkUtil.getCurrentTime();
 
-        boxStore.runInTx(new Runnable() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
-            public void run() {
+            public void execute(Realm transaction) {
                 for (int i = 0; i < iteration; i++) {
-                    Box<PersonObjectBox> box = boxStore.boxFor(PersonObjectBox.class);
-                    PersonObjectBox person = new PersonObjectBox();
+                    RealmPerson person = new RealmPerson();
+                    person.setId(i);
                     person.setEmail(dataFactory.getEmailAddress());
-                    box.put(person);
+                    realm.insert(person);
                 }
             }
         });
+
         return BenchmarkUtil.getElapsedTime(start);
     }
 
     @Override
     public long runQuery(String query) {
         long start = BenchmarkUtil.getCurrentTime();
-        Box<PersonObjectBox> box = boxStore.boxFor(PersonObjectBox.class);
-        box.query().contains(PersonObjectBox_.email, query).build().count();
+        realm.where(RealmPerson.class).contains("email", query, Case.SENSITIVE).findAll().size();
         return BenchmarkUtil.getElapsedTime(start);
     }
 
     @Override
     public void tearDown() {
-        boxStore.close();
-        boxStore.deleteAllFiles();
+        realm.close();
     }
-
 }

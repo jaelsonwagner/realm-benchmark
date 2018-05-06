@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.nelaupe.benchmark.BenchmarkExecutor;
+import fr.nelaupe.benchmark.BenchmarkUtil;
 import fr.nelaupe.benchmark.greendao.GreenPerson;
 
 /**
@@ -24,6 +25,7 @@ public class LoopBenchmark implements BenchmarkExecutor {
 
     @Override
     public void setup(Context context) {
+        /* Nothing to do. */
     }
 
     @Override
@@ -32,7 +34,7 @@ public class LoopBenchmark implements BenchmarkExecutor {
 
         final DataFactory dataFactory = new DataFactory();
 
-        long start = System.currentTimeMillis();
+        long start = BenchmarkUtil.getCurrentTime();
 
         for (int i = 0; i < iteration; i++) {
             GreenPerson person = new GreenPerson();
@@ -40,18 +42,19 @@ public class LoopBenchmark implements BenchmarkExecutor {
             database.add(person);
         }
 
-        return System.currentTimeMillis() - start;
+        return BenchmarkUtil.getElapsedTime(start);
     }
+
 
     @Override
     public long runQuery(String query) {
-        long start = System.nanoTime();
+        long start = BenchmarkUtil.getCurrentTime();
 
         for (GreenPerson person : database) {
             person.getEmail().contains(query);
         }
 
-        return System.nanoTime() - start;
+        return BenchmarkUtil.getElapsedTime(start);
     }
 
     @Override

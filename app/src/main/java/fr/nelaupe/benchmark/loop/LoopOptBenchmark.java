@@ -3,6 +3,7 @@
  */
 package fr.nelaupe.benchmark.loop;
 
+import fr.nelaupe.benchmark.BenchmarkUtil;
 import fr.nelaupe.benchmark.greendao.GreenPerson;
 
 /**
@@ -14,14 +15,14 @@ public class LoopOptBenchmark extends LoopBenchmark {
 
     @Override
     public long runQuery(String query) {
-        long start = System.nanoTime();
+        long start = BenchmarkUtil.getCurrentTime();
 
         for (int i = 0, databaseSize = database.size(); i < databaseSize; i++) {
             GreenPerson person = database.get(i);
             person.getEmail().contains(query);
         }
 
-        return System.nanoTime() - start;
+        return BenchmarkUtil.getElapsedTime(start);
     }
 
 }

@@ -15,7 +15,7 @@ import io.objectbox.BoxStore;
  * Date 26/03/15
  */
 
-public class ObjectBoxBenchmark implements BenchmarkExecutor {
+public class ObjectBoxBenchmarkIndexed implements BenchmarkExecutor {
 
     private BoxStore boxStore;
 
@@ -34,8 +34,8 @@ public class ObjectBoxBenchmark implements BenchmarkExecutor {
             @Override
             public void run() {
                 for (int i = 0; i < iteration; i++) {
-                    Box<PersonObjectBox> box = boxStore.boxFor(PersonObjectBox.class);
-                    PersonObjectBox person = new PersonObjectBox();
+                    Box<PersonObjectBoxIndexed> box = boxStore.boxFor(PersonObjectBoxIndexed.class);
+                    PersonObjectBoxIndexed person = new PersonObjectBoxIndexed();
                     person.setEmail(dataFactory.getEmailAddress());
                     box.put(person);
                 }
@@ -45,10 +45,10 @@ public class ObjectBoxBenchmark implements BenchmarkExecutor {
     }
 
     @Override
-    public long runQuery(String query) {
+    public long runQuery(final String query) {
         long start = BenchmarkUtil.getCurrentTime();
-        Box<PersonObjectBox> box = boxStore.boxFor(PersonObjectBox.class);
-        box.query().contains(PersonObjectBox_.email, query).build().count();
+        Box<PersonObjectBoxIndexed> box = boxStore.boxFor(PersonObjectBoxIndexed.class);
+        box.query().contains(PersonObjectBoxIndexed_.email, query).build().count();
         return BenchmarkUtil.getElapsedTime(start);
     }
 
